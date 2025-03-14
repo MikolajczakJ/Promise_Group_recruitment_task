@@ -7,27 +7,31 @@ using System.Threading.Tasks;
 
 namespace WarehouseManagementSystem
 {
-    public interface IOrderService
-    {
-        public void MainMenu();
-    }
 
-    public class OrderService: IOrderService
+    public class OrderService
     {
-
         public void MainMenu()
         {
-            var option = Menu.MultipleChoice("Choose an option:", "Create order", "Exit");
+            int option;
+            do
+            {
+                option = Menu.MultipleChoice("Choose an option:", "Create order", "Orders", "Exit");
             switch (option)
             {
                 case 0:
-                    Order order = CreateOrder();
-                    Console.WriteLine(order);
+                    if (AddOrder())
+                        Console.WriteLine("Order added successfully");
+                    else 
+                        Console.WriteLine("Something went wrong");
+                    break;
+                case 1:
+                    ListOrders(GetOrders());
                     break;
             }
+            } while (option != 2);
         }
 
-        private Order CreateOrder()
+        private bool AddOrder()
         {
             Console.Write("Enter the price of the order:");
             decimal price = ParseDecimal(Console.ReadLine());
@@ -38,8 +42,28 @@ namespace WarehouseManagementSystem
             ClientTypes clientType = (ClientTypes)Menu.MultipleChoice("Client type:","Individual","Company");
             PaymentMethods paymentMethod = (PaymentMethods)Menu.MultipleChoice("Payment method:","Cash","Credit card");
             var newOrder = new Order(price, name, deliveryAddress, clientType, paymentMethod, OrderStatuses.New);
-            return newOrder;
+            using(WarehouseDbContext dbContext = new WarehouseDbContext())
+            {
+                dbContext.Orders.Add(newOrder);
+                return dbContext.SaveChanges()>0;
+            }
         }
+        public IEnumerable<Order> GetOrders()
+        {
+            using (WarehouseDbContext dbContext = new WarehouseDbContext())
+            {
+                return dbContext.Orders.ToList();
+            }
+        }
+        private void ListOrders(IEnumerable<Order> orders)
+        {
+            foreach (var order in orders)
+            {
+                Console.WriteLine(order);
+            }
+            Console.WriteLine("Press any key to return to main menu");
+            Console.ReadLine();
+        }   
 
         private decimal ParseDecimal(string input)
         {
