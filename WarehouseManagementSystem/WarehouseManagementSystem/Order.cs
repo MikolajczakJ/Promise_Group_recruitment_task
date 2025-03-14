@@ -19,7 +19,7 @@ namespace WarehouseManagementSystem
     public enum OrderStatus
     {
         New,
-        InMagazine,
+        InWarehouse,
         InDelivery,
         Returned,
         Error,
@@ -33,5 +33,18 @@ namespace WarehouseManagementSystem
         public ClientType ClientType { get; set; }
         public PaymentMethod PaymentMethod { get; set; }
         public OrderStatus OrderStatus { get; set; }
+
+        public Order(decimal price, string name, string deliveryAddress, ClientType clientType, PaymentMethod paymentMethod, OrderStatus orderStatus)
+        {
+            Price = price;
+            Name = name;
+            DeliveryAddress = deliveryAddress;
+            ClientType = clientType;
+            PaymentMethod = paymentMethod;
+            OrderStatus = orderStatus;
+        }
+
+        public override string ToString()
+            => $"Price: {Price.ToString("C")} | Name: {Name} | DeliveryAddress: {DeliveryAddress} | ClientType: {ClientType} | PaymentMethod: {PaymentMethod} | OrderStatus: {OrderStatus}";
     }
 }
