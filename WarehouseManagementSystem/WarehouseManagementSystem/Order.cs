@@ -6,17 +6,17 @@ using System.Threading.Tasks;
 
 namespace WarehouseManagementSystem
 {
-    public enum ClientType
+    public enum ClientTypes
     {
         Individual,
         Company
     }
-    public enum PaymentMethod
+    public enum PaymentMethods
     {
         Cash,
         CreditCard
     }
-    public enum OrderStatus
+    public enum OrderStatuses
     {
         New,
         InWarehouse,
@@ -27,14 +27,15 @@ namespace WarehouseManagementSystem
     }
     public class Order
     {
+        public int Id { get; set; }
         public decimal Price { get; set; }
         public string Name { get; set; }
         public string DeliveryAddress { get; set; }
-        public ClientType ClientType { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
-        public OrderStatus OrderStatus { get; set; }
+        public ClientTypes ClientType { get; set; }
+        public PaymentMethods PaymentMethod { get; set; }
+        public OrderStatuses OrderStatus { get; set; }
 
-        public Order(decimal price, string name, string deliveryAddress, ClientType clientType, PaymentMethod paymentMethod, OrderStatus orderStatus)
+        public Order(decimal price, string name, string deliveryAddress, ClientTypes clientType, PaymentMethods paymentMethod, OrderStatuses orderStatus)
         {
             Price = price;
             Name = name;
@@ -45,6 +46,6 @@ namespace WarehouseManagementSystem
         }
 
         public override string ToString()
-            => $"Price: {Price.ToString("C")} | Name: {Name} | DeliveryAddress: {DeliveryAddress} | ClientType: {ClientType} | PaymentMethod: {PaymentMethod} | OrderStatus: {OrderStatus}";
+            => $"Id: {Id} | Price: {Price.ToString("C")} | Name: {Name} | DeliveryAddress: {DeliveryAddress} | ClientType: {ClientType} | PaymentMethod: {PaymentMethod} | OrderStatus: {OrderStatus}";
     }
 }
