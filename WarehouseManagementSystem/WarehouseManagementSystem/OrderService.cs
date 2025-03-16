@@ -40,15 +40,18 @@ namespace WarehouseManagementSystem
 
         private bool AddOrder()
         {
+            OrderStatuses orderStatus = OrderStatuses.New;
             Console.Write("Enter the price of the order:");
             decimal price = ParseDecimal(Console.ReadLine());
             Console.Write("Enter the name of the order:");
             string name = Console.ReadLine();
             Console.Write("Enter the delivery address:");
             string deliveryAddress = Console.ReadLine();
+            if (string.IsNullOrEmpty(deliveryAddress))
+                orderStatus = OrderStatuses.Error;
             ClientTypes clientType = (ClientTypes)Menu.MultipleChoice("Client type:","Individual","Company");
             PaymentMethods paymentMethod = (PaymentMethods)Menu.MultipleChoice("Payment method:","Cash","Credit card");
-            var newOrder = new Order(price, name, deliveryAddress, clientType, paymentMethod, OrderStatuses.New);
+            var newOrder = new Order(price, name, deliveryAddress, clientType, paymentMethod, orderStatus);
             using(WarehouseDbContext dbContext = new WarehouseDbContext())
             {
                 dbContext.Orders.Add(newOrder);
