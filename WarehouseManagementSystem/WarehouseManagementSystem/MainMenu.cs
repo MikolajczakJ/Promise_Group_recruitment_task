@@ -13,6 +13,8 @@ namespace WarehouseManagementSystem
         {
             OrderService _orderService = new OrderService();
             int option;
+
+            Seeder.Seed();
             do
             {
                 option = MenuHelper.MultipleChoice("Choose an option:", "Create order", "Orders", "Move to warehouse", "Move to delivery", "Exit");
