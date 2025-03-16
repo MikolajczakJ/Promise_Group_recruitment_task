@@ -5,6 +5,7 @@ using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WarehouseManagementSystem.Helpers;
 
 namespace WarehouseManagementSystem
 {
@@ -16,41 +17,46 @@ namespace WarehouseManagementSystem
             int option;
             do
             {
-                option = Menu.MultipleChoice("Choose an option:", "Create order", "Orders","Move to warehouse","Move to delivery","Exit");
-            switch (option)
-            {
-                case 0:
-                    if (AddOrder())
-                        Console.WriteLine("Order added successfully");
-                    else 
-                        Console.WriteLine("Something went wrong");
-                    break;
-                case 1:
-                    ListOrders(GetOrders());
-                    break;
-                case 2:
-                    UpdateOrderStatus(OrderStatuses.InWarehouse);
-                    break;
-                case 3:
-                    UpdateOrderStatus(OrderStatuses.InDelivery);
-                    break;
-            }
+                option = MenuHelper.MultipleChoice("Choose an option:", "Create order", "Orders","Move to warehouse","Move to delivery","Exit");
+                switch (option)
+                {
+                    case 0:
+                        if (AddOrder())
+                            Console.WriteLine("Order added successfully");
+                        else 
+                            Console.WriteLine("Something went wrong");
+                        break;
+                    case 1:
+                        ListOrders(GetOrders());
+                        break;
+                    case 2:
+                        UpdateOrderStatus(OrderStatuses.InWarehouse);
+                        break;
+                    case 3:
+                        UpdateOrderStatus(OrderStatuses.InDelivery);
+                        break;
+                }
             } while (option != 4);
         }
 
         private bool AddOrder()
         {
             OrderStatuses orderStatus = OrderStatuses.New;
-            Console.Write("Enter the price of the order:");
-            decimal price = ParseDecimal(Console.ReadLine());
+            decimal price;
+            string name, deliveryAddress;
+            ClientTypes clientType;
+            PaymentMethods paymentMethod;
+            
+            price = ValueParser.ParseDecimal("Enter the price of the order:");
             Console.Write("Enter the name of the order:");
-            string name = Console.ReadLine();
+            name = Console.ReadLine();
             Console.Write("Enter the delivery address:");
-            string deliveryAddress = Console.ReadLine();
+            deliveryAddress = Console.ReadLine();
             if (string.IsNullOrEmpty(deliveryAddress))
                 orderStatus = OrderStatuses.Error;
-            ClientTypes clientType = (ClientTypes)Menu.MultipleChoice("Client type:","Individual","Company");
-            PaymentMethods paymentMethod = (PaymentMethods)Menu.MultipleChoice("Payment method:","Cash","Credit card");
+            
+            clientType = (ClientTypes)MenuHelper.MultipleChoice("Client type:","Individual","Company");
+            paymentMethod = (PaymentMethods)MenuHelper.MultipleChoice("Payment method:","Cash","Credit card");
             var newOrder = new Order(price, name, deliveryAddress, clientType, paymentMethod, orderStatus);
             using(WarehouseDbContext dbContext = new WarehouseDbContext())
             {
@@ -61,8 +67,8 @@ namespace WarehouseManagementSystem
 
         private bool UpdateOrderStatus(OrderStatuses orderStatus)
         {
-            Console.Write("Enter the Id of the order:");
-            int id = ParseInt(Console.ReadLine());
+            ListOrders(GetOrders());
+            int id = ValueParser.ParseInt("Enter the Id of the order:");
             using (WarehouseDbContext dbContext = new WarehouseDbContext())
             {
                 var order = dbContext.Orders.FirstOrDefault(o => o.Id == id);
@@ -84,50 +90,22 @@ namespace WarehouseManagementSystem
                 return dbContext.SaveChanges() > 0;
             }
         }
-
-
-        public IEnumerable<Order> GetOrders()
+        private IEnumerable<Order> GetOrders()
         {
             using (WarehouseDbContext dbContext = new WarehouseDbContext())
-            {
                 return dbContext.Orders.ToList();
-            }
         }
         private void ListOrders(IEnumerable<Order> orders)
         {
-            foreach (var order in orders)
+            if (orders.Count()==0)
+                Console.WriteLine("There are no orders in the database");
+            else
             {
-                Console.WriteLine(order);
+                foreach (var order in orders)
+                    Console.WriteLine(order);
             }
             Console.WriteLine("Press any key to return to main menu");
             Console.ReadLine();
         }   
-
-        private decimal ParseDecimal(string input)
-        {
-            decimal result;
-            bool flag = decimal.TryParse(input, out result) && result > 0;
-            while (!flag)
-            {
-                Console.WriteLine("Invalid input. Please enter a valid decimal number greater than 0:");
-                input = Console.ReadLine();
-                flag = decimal.TryParse(input, out result) && result>0;
-            }
-            return result;
-        }
-
-        private int ParseInt(string input)
-        {
-            int result;
-            bool flag = int.TryParse(input, out result) && result > 0;
-            while (!flag)
-            {
-                Console.WriteLine("Invalid input. Please enter a valid decimal number greater than 0:");
-                input = Console.ReadLine();
-                flag = int.TryParse(input, out result) && result > 0;
-            }
-            return result;
-        }
-
     }
 }

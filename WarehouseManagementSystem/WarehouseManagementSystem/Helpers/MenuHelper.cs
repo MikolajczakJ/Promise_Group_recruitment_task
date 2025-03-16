@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace WarehouseManagementSystem
+namespace WarehouseManagementSystem.Helpers
 {
-    public static class Menu
+    public static class MenuHelper
     {
         public static int MultipleChoice(string message, params string[] options)
         {
