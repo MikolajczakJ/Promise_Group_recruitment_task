@@ -15,7 +15,7 @@ namespace WarehouseManagementSystem
             int option;
             do
             {
-                option = Menu.MultipleChoice("Choose an option:", "Create order", "Orders", "Exit");
+                option = Menu.MultipleChoice("Choose an option:", "Create order", "Orders","Move to warehouse","Move to delivery","Exit");
             switch (option)
             {
                 case 0:
@@ -27,8 +27,14 @@ namespace WarehouseManagementSystem
                 case 1:
                     ListOrders(GetOrders());
                     break;
+                case 2:
+                    UpdateOrderStatus(OrderStatuses.InWarehouse);
+                    break;
+                case 3:
+                    UpdateOrderStatus(OrderStatuses.InDelivery);
+                    break;
             }
-            } while (option != 2);
+            } while (option != 4);
         }
 
         private bool AddOrder()
@@ -48,6 +54,25 @@ namespace WarehouseManagementSystem
                 return dbContext.SaveChanges()>0;
             }
         }
+
+        private bool UpdateOrderStatus(OrderStatuses orderStatus)
+        {
+            Console.Write("Enter the Id of the order:");
+            int id = ParseInt(Console.ReadLine());
+            using (WarehouseDbContext dbContext = new WarehouseDbContext())
+            {
+                var order = dbContext.Orders.FirstOrDefault(o => o.Id == id);
+                if (order == null)
+                {
+                    Console.WriteLine("Order not found");
+                    return false;
+                }
+                order.OrderStatus = orderStatus;
+                return dbContext.SaveChanges() > 0;
+            }
+        }
+
+
         public IEnumerable<Order> GetOrders()
         {
             using (WarehouseDbContext dbContext = new WarehouseDbContext())
@@ -74,6 +99,19 @@ namespace WarehouseManagementSystem
                 Console.WriteLine("Invalid input. Please enter a valid decimal number greater than 0:");
                 input = Console.ReadLine();
                 flag = decimal.TryParse(input, out result) && result>0;
+            }
+            return result;
+        }
+
+        private int ParseInt(string input)
+        {
+            int result;
+            bool flag = int.TryParse(input, out result) && result > 0;
+            while (!flag)
+            {
+                Console.WriteLine("Invalid input. Please enter a valid decimal number greater than 0:");
+                input = Console.ReadLine();
+                flag = int.TryParse(input, out result) && result > 0;
             }
             return result;
         }
