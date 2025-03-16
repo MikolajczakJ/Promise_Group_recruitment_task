@@ -35,8 +35,9 @@ namespace WarehouseManagementSystemNoDb
         public PaymentMethods PaymentMethod { get; set; }
         public OrderStatuses OrderStatus { get; set; }
 
-        public Order(decimal price, string name, string deliveryAddress, ClientTypes clientType, PaymentMethods paymentMethod, OrderStatuses orderStatus)
+        public Order(int id,decimal price, string name, string deliveryAddress, ClientTypes clientType, PaymentMethods paymentMethod, OrderStatuses orderStatus)
         {
+            Id = id;    
             Price = price;
             Name = name;
             DeliveryAddress = deliveryAddress;
