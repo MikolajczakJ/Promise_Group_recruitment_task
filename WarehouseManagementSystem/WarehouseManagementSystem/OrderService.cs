@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO.Pipelines;
 using System.Linq;
 using System.Text;
@@ -67,7 +68,16 @@ namespace WarehouseManagementSystem
                     Console.WriteLine("Order not found");
                     return false;
                 }
-                order.OrderStatus = orderStatus;
+                if (orderStatus == OrderStatuses.InWarehouse && order.Price>=2500 && order.PaymentMethod == PaymentMethods.Cash)
+                {
+                    order.OrderStatus = OrderStatuses.Returned;
+                    Console.WriteLine($"Order Price is greater or equal to 2500 ({order.Price:C}), order status has been set to \"Returned to client \"\n Press enter to proceed");
+                    Console.ReadLine();
+                }
+                else
+                {
+                    order.OrderStatus = orderStatus;
+                }
                 return dbContext.SaveChanges() > 0;
             }
         }
