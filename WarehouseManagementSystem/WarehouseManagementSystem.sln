@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseManagementSystem",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseManagementSystemNoDb", "WarehouseManagementSystemNoDb\WarehouseManagementSystemNoDb.csproj", "{5843E9E7-1911-4CAB-B3F0-151AFF432D4A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarehouseManagementSystemNoDbTests", "WarehouseManagementSystemNoDbTests\WarehouseManagementSystemNoDbTests.csproj", "{F981CB01-1487-4DF9-89C9-1C007A9F3305}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{5843E9E7-1911-4CAB-B3F0-151AFF432D4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5843E9E7-1911-4CAB-B3F0-151AFF432D4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5843E9E7-1911-4CAB-B3F0-151AFF432D4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F981CB01-1487-4DF9-89C9-1C007A9F3305}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F981CB01-1487-4DF9-89C9-1C007A9F3305}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F981CB01-1487-4DF9-89C9-1C007A9F3305}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F981CB01-1487-4DF9-89C9-1C007A9F3305}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
