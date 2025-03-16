@@ -12,34 +12,7 @@ namespace WarehouseManagementSystem
 
     public class OrderService
     {
-        public void MainMenu()
-        {
-            int option;
-            do
-            {
-                option = MenuHelper.MultipleChoice("Choose an option:", "Create order", "Orders","Move to warehouse","Move to delivery","Exit");
-                switch (option)
-                {
-                    case 0:
-                        if (AddOrder())
-                            Console.WriteLine("Order added successfully");
-                        else 
-                            Console.WriteLine("Something went wrong");
-                        break;
-                    case 1:
-                        ListOrders(GetOrders());
-                        break;
-                    case 2:
-                        UpdateOrderStatus(OrderStatuses.InWarehouse);
-                        break;
-                    case 3:
-                        UpdateOrderStatus(OrderStatuses.InDelivery);
-                        break;
-                }
-            } while (option != 4);
-        }
-
-        private bool AddOrder()
+        public bool AddOrder()
         {
             OrderStatuses orderStatus = OrderStatuses.New;
             decimal price;
@@ -65,7 +38,7 @@ namespace WarehouseManagementSystem
             }
         }
 
-        private bool UpdateOrderStatus(OrderStatuses orderStatus)
+        public bool UpdateOrderStatus(OrderStatuses orderStatus)
         {
             ListOrders(GetOrders());
             int id = ValueParser.ParseInt("Enter the Id of the order:");
@@ -84,18 +57,16 @@ namespace WarehouseManagementSystem
                     Console.ReadLine();
                 }
                 else
-                {
                     order.OrderStatus = orderStatus;
-                }
                 return dbContext.SaveChanges() > 0;
             }
         }
-        private IEnumerable<Order> GetOrders()
+        public IEnumerable<Order> GetOrders()
         {
             using (WarehouseDbContext dbContext = new WarehouseDbContext())
                 return dbContext.Orders.ToList();
         }
-        private void ListOrders(IEnumerable<Order> orders)
+        public void ListOrders(IEnumerable<Order> orders)
         {
             if (orders.Count()==0)
                 Console.WriteLine("There are no orders in the database");

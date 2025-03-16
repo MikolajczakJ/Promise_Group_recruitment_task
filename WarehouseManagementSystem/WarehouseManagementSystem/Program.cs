@@ -8,8 +8,7 @@ namespace WarehouseManagementSystem
     {
         static void Main(string[] args)
         {
-            OrderService orderService = new OrderService();
-            orderService.MainMenu();
+            MainMenu.MainMenuScreen();
         }
 
     }
